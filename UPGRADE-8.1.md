@@ -127,6 +127,8 @@ Serializer
 ----------
 
  * Deprecate datetime constructor as a fallback, in version 9.0 a `Symfony\Component\Serializer\Exception\NotNormalizableValueException` will be thrown when a date could not be parsed using the default format
+ * Change the signature of `PartialDenormalizationException::__construct($data, array $errors)` to `__construct(mixed $data, array $notNormalizableErrors, array $extraAttributesErrors = [])`
+ * Deprecate `PartialDenormalizationException::getErrors()`, use `getNotNormalizableValueErrors()` instead
 
 Uid
 ---
