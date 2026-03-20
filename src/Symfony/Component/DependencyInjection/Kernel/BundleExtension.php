@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Component\HttpKernel\Bundle;
+namespace Symfony\Component\DependencyInjection\Kernel;
 
 use Symfony\Component\Config\Definition\Configuration;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
