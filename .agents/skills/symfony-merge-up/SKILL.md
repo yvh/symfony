@@ -54,7 +54,6 @@ For each branch in `BRANCHES`:
 ```bash
 git checkout <branch>
 git pull --ff-only origin <branch>
-composer up
 ```
 
 Using `--ff-only` ensures local branches haven't diverged from origin. If the
