@@ -7,6 +7,36 @@ in 6.4 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v6.4.0...v6.4.1
 
+* 6.4.36 (2026-03-31)
+
+ * bug #63823 [DependencyInjection] Fix rejecting inline services in parameters section (nicolas-grekas)
+ * bug #63817 [Serializer] Fix denormalization of nested array with key types (mtarld)
+ * bug #63818 [Cache] Ensure compatibility with Relay extension 0.21.0 (lyrixx)
+ * bug #63806 [Ldap] Make the Adapter resettable (kira0269, nicolas-grekas)
+ * bug #63720 [MonologBridge] Fix `ConsoleHandler` losing output after nested command terminates (mp3000mp)
+ * bug #63723 [EventDispatcher] Fix memory leak in TraceableEventDispatcher for long-running processes (wazum)
+ * bug #63749 [Console] Fix performance regression in OutputFormatter for ASCII content (pcescon)
+ * bug #63683 [TwigBridge] Fix image method to use DataPart content ID (pavelwitassek)
+ * bug #63787 [Serializer] Fix can*() prefix support in GetSetMethodNormalizer (sn3mdev)
+ * bug #63747 [Cache] Fix `Psr16Cache::getMultiple()` returning `ValueWrapper` with `TagAwareAdapter` (pcescon)
+ * bug #63766 [Dotenv] Fix preloading warning by replacing anonymous exception class (pcescon)
+ * bug #63777 [FrameworkBundle] Fix setting `router.request_context.base_url` when option `default_uri` is defined (nicolas-grekas)
+ * bug #63692 [HttpClient][EventSourceHttpClient] Fix broken streams when first event is delayed (LachlanArthur)
+ * bug #63726 [HttpClient] Unset push response content when the push handler is released (sakozoko)
+ * bug #63736 [Cache] Fix undefined array key when tag save fails in AbstractTagAwareAdapter (pcescon)
+ * bug #63724 [HttpKernel] Fix allowing invalid `#[Autowire]` references in controller arguments (valtzu)
+ * bug #63691 [Messenger] Use SignalRegistry::isSupported() in ConsumeMessagesCommand (shyim)
+ * bug #63674 [Dotenv] Fix self-referencing variables with defaults and env key resolution during deferred expansion (nicolas-grekas)
+ * bug #63676 [HttpKernel] Reset router locale to default when finishing main request (guillaumeVDP)
+ * bug #63679 [WebProfilerBundle] Only decrement pendingRequests when it's more than zero (andyexeter)
+ * bug #63655 [Cache] Fix ChainAdapter ignoring item expiry when propagating to earlier adapters (guillaumeVDP)
+ * bug #63656 [Form] Fix typed property initialization in ValidatorExtension (SeverinGloeckle)
+ * bug #63643 [Messenger] Fix duplicate pending messages in Redis transport with batch handlers (wazum)
+ * bug #63639 [ErrorHandler] "`@method`" deprecation notices are missing when interface inheritance is used (mpdude)
+ * bug #63635 [VarExporter] Skip rewriting initialized readonly properties during hydration (nicolas-grekas)
+ * bug #63629  Fix deprecation notices for "`@method`" annotations and classes with `__call()` (mpdude)
+ * bug #63620 [Dotenv] Fix escaped dollar signs lost during deferred variable resolution (nicolas-grekas)
+
 * 6.4.35 (2026-03-06)
 
  * bug #63604 [Console] Fix `ApplicationTester` ignoring `interactive` and `verbosity` options when `SHELL_VERBOSITY` is set (nicolas-grekas)
