@@ -9,16 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Component\HttpKernel\Tests\Config;
+namespace Symfony\Component\DependencyInjection\Tests\Kernel;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Config\FileLocator;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\DependencyInjection\Kernel\FileLocator;
+use Symfony\Component\DependencyInjection\Kernel\KernelInterface;
 
-#[Group('legacy')]
-#[IgnoreDeprecations]
 class FileLocatorTest extends TestCase
 {
     public function testLocate()
