@@ -89,7 +89,7 @@ jobs:
           $workingDir = $PWD.Path
 
           Remove-Item -Path src\Symfony\Bridge\PhpUnit -Recurse
-          mv src\Symfony\Component\HttpClient\phpunit.xml.dist src\Symfony\Component\HttpClient\phpunit.xml
+          rm src\Symfony\Component\HttpClient\phpunit.xml.dist
           # HttpClient tests need to run separately, they timeout otherwise
           $hcJob = Start-Job -ScriptBlock {
             Set-Location $using:workingDir

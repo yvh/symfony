@@ -20,6 +20,21 @@ if (!getenv('SYMFONY_PHPUNIT_VERSION')) {
         putenv('SYMFONY_PHPUNIT_VERSION=11.5');
     }
 }
+if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<')) {
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__.'/src', FilesystemIterator::SKIP_DOTS));
+    $iterator = new RegexIterator($iterator, '/phpunit\.xml\.dist$/');
+    foreach (array_merge([__DIR__.'/phpunit.xml.dist'], iterator_to_array($iterator)) as $file) {
+        $target = substr($file, 0, -5);
+        $content = file_get_contents($file);
+        $content = str_replace('<deprecationTrigger ignoreUndefinedTriggers="true">', '<deprecationTrigger>', $content);
+        if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '12', '<')) {
+            $content = str_replace('<function>trigger_deprecation</function>', '', $content);
+            $content = str_replace('<method>Doctrine\Deprecations\Deprecation::trigger</method>', '', $content);
+            $content = str_replace('<method>Doctrine\Deprecations\Deprecation::triggerIfCalledFromOutside</method>', '', $content);
+        }
+        file_put_contents($target, $content);
+    }
+}
 if (!getenv('SYMFONY_PATCH_TYPE_DECLARATIONS')) {
     putenv('SYMFONY_PATCH_TYPE_DECLARATIONS=deprecations=1');
 }
