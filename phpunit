@@ -16,6 +16,16 @@ if (!getenv('SYMFONY_PHPUNIT_VERSION')) {
         $_SERVER['argv'][] = '--fail-on-phpunit-notice';
     }
 }
+if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<')) {
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__.'/src', FilesystemIterator::SKIP_DOTS));
+    $iterator = new RegexIterator($iterator, '/phpunit\.xml\.dist$/');
+    foreach (array_merge([__DIR__.'/phpunit.xml.dist'], iterator_to_array($iterator)) as $file) {
+        $target = substr($file, 0, -5);
+        $content = file_get_contents($file);
+        $content = str_replace('<deprecationTrigger ignoreUndefinedTriggers="true">', '<deprecationTrigger>', $content);
+        file_put_contents($target, $content);
+    }
+}
 if (!getenv('SYMFONY_PATCH_TYPE_DECLARATIONS')) {
     putenv('SYMFONY_PATCH_TYPE_DECLARATIONS=deprecations=1');
 }
