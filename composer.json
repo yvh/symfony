@@ -33,7 +33,7 @@
         "symfony/translation-implementation": "2.3|3.0"
     },
     "require": {
-        "php": ">=8.4",
+        "php": ">=8.4.1",
         "composer-runtime-api": ">=2.1",
         "composer/semver": "^3.0",
         "ext-xml": "*",
