@@ -133,6 +133,20 @@ Uid
 
  * Add argument `$format` to `Ulid::isValid()`
 
+Validator
+---------
+
+* Deprecate `ConstraintValidatorInterface::initialize()` and `ConstraintValidatorInterface::validate()` in
+  favor of `ConstraintValidatorInterface::validateInContext()`. The `ConstraintValidator` abstract class
+  handles the context management when extending it. When writing tests with `ConstraintValidatorTestCase`,
+  use the new `validate` method to abstract the way to use the constraint validator.
+
+  | Your code                                          | Action required
+  |----------------------------------------------------| ---------------
+  | extends `ConstraintValidator`                      | Nothing to do
+  | implements `ConstraintValidatorInterface` directly | Implement `validateInContext()`
+  | tests using `ConstraintValidatorTestCase`          | Call `$this->validate()` instead of `$this->validator->validate()`
+
 VarExporter
 -----------
 
