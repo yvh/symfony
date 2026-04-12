@@ -60,6 +60,15 @@ FrameworkBundle
  * Deprecate setting `framework.http_client.default_options.caching.max_ttl` to `null`, use a positive integer instead
  * Deprecate `senders` nesting level for messenger routing config; use string or a list of strings instead
  * Deprecate registering console commands by overriding `Bundle::registerCommands()`, use the `#[AsCommand]` attribute or the `console.command` service tag instead
+ * Deprecate calling `FrameworkExtension::load()` directly without first loading `ServicesBundle`'s extension. Tests that wire up a `ContainerBuilder` by hand should now do:
+
+   ```diff
+   +new ServicesBundle()->getContainerExtension()->load([], $container);
+
+    new FrameworkExtension()->load($config, $container);
+   ```
+
+   For real kernels, `FrameworkBundle` carries a `#[RequiredBundle(ServicesBundle::class)]` attribute that should be processed already.
 
 HttpClient
 ----------
