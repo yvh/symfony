@@ -6,27 +6,14 @@ if (!file_exists(__DIR__.'/vendor/symfony/phpunit-bridge/bin/simple-phpunit')) {
     exit(1);
 }
 if (!getenv('SYMFONY_PHPUNIT_VERSION')) {
-    if (\PHP_VERSION_ID >= 80401) {
-        putenv('SYMFONY_PHPUNIT_VERSION=13');
-    } else {
-        putenv('SYMFONY_PHPUNIT_VERSION=12');
-    }
+    putenv('SYMFONY_PHPUNIT_VERSION=13');
 
     if (!in_array('--fail-on-empty-test-suite', $_SERVER['argv'], true) && !in_array('--do-not-fail-on-empty-test-suite', $_SERVER['argv'], true)) {
         $_SERVER['argv'][] = '--do-not-fail-on-empty-test-suite';
     }
+
     if (!in_array('--fail-on-phpunit-notice', $_SERVER['argv'], true) && !in_array('--do-not-fail-on-phpunit-notice', $_SERVER['argv'], true)) {
         $_SERVER['argv'][] = '--fail-on-phpunit-notice';
-    }
-}
-if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<')) {
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__.'/src', FilesystemIterator::SKIP_DOTS));
-    $iterator = new RegexIterator($iterator, '/phpunit\.xml\.dist$/');
-    foreach (array_merge([__DIR__.'/phpunit.xml.dist'], iterator_to_array($iterator)) as $file) {
-        $target = substr($file, 0, -5);
-        $content = file_get_contents($file);
-        $content = str_replace('<deprecationTrigger ignoreUndefinedTriggers="true">', '<deprecationTrigger>', $content);
-        file_put_contents($target, $content);
     }
 }
 if (!getenv('SYMFONY_PATCH_TYPE_DECLARATIONS')) {

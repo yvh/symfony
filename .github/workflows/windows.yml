@@ -42,7 +42,7 @@ jobs:
         run: |
           $env:Path = 'c:\php;' + $env:Path
           mkdir c:\php && cd c:\php
-          iwr -outf php.zip https://github.com/symfony/binary-utils/releases/download/v0.1/php-8.4.0-Win32-vs17-x86.zip
+          iwr -outf php.zip https://github.com/symfony/binary-utils/releases/download/v0.1/php-8.4.1-Win32-vs17-x86.zip
           7z x php.zip -y >nul
           Copy php.ini-development php.ini
           "memory_limit=-1" >> php.ini
@@ -89,7 +89,7 @@ jobs:
           $workingDir = $PWD.Path
 
           Remove-Item -Path src\Symfony\Bridge\PhpUnit -Recurse
-          rm src\Symfony\Component\HttpClient\phpunit.xml.dist
+          mv src\Symfony\Component\HttpClient\phpunit.xml.dist src\Symfony\Component\HttpClient\phpunit.xml
           # HttpClient tests need to run separately, they timeout otherwise
           $hcJob = Start-Job -ScriptBlock {
             Set-Location $using:workingDir
@@ -143,7 +143,7 @@ jobs:
         run: |
           $env:Path = 'c:\php;' + $env:Path
           mkdir c:\php && cd c:\php
-          iwr -outf php.zip https://github.com/symfony/binary-utils/releases/download/v0.1/php-8.4.0-Win32-vs17-x86.zip
+          iwr -outf php.zip https://github.com/symfony/binary-utils/releases/download/v0.1/php-8.4.1-Win32-vs17-x86.zip
           7z x php.zip -y >nul
           cd ext
           iwr -outf php_apcu.zip https://github.com/symfony/binary-utils/releases/download/v0.1/php_apcu-5.1.24-8.4-ts-vs17-x86.zip
