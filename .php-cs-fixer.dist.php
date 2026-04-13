@@ -45,62 +45,9 @@ return (new PhpCsFixer\Config())
                 '/s',
             ]),
         ],
+        'modern_serialization_methods' => false,
+        'void_return' => false,
     ])
-    ->setRuleCustomisationPolicy(new class implements PhpCsFixer\Config\RuleCustomisationPolicyInterface {
-        public function getPolicyVersionForCache(): string
-        {
-            return hash_file('xxh128', __FILE__);
-        }
-
-        public function getRuleCustomisers(): array
-        {
-            return [
-                'php_unit_attributes' => static function (SplFileInfo $file) {
-                    // temporary hack due to bug: https://github.com/symfony/symfony/issues/62734
-                    if (!$file instanceof Symfony\Component\Finder\SplFileInfo) {
-                        return false;
-                    }
-
-                    $relativePathname = $file->getRelativePathname();
-
-                    // For packages/namespaces that are part of public API and
-                    // as such are not bound to any specific PHPUnit version,
-                    // we have to keep both annotations and attributes.
-                    if (
-                        str_starts_with($relativePathname, 'Symfony/Bridge/PhpUnit/')
-                        || str_starts_with($relativePathname, 'Symfony/Contracts/')
-                        || str_contains($relativePathname, '/Test/') // public namespace, do not mistake it with `/Tests/`
-                    ) {
-                        $fixer = new PhpCsFixer\Fixer\PhpUnit\PhpUnitAttributesFixer();
-                        $fixer->configure(['keep_annotations' => true]);
-
-                        return $fixer;
-                    }
-
-                    // Keep the default configuration for other files
-                    return true;
-                },
-                'void_return' => static function (SplFileInfo $file) {
-                    // temporary hack due to bug: https://github.com/symfony/symfony/issues/62734
-                    if (!$file instanceof Symfony\Component\Finder\SplFileInfo) {
-                        return false;
-                    }
-
-                    $relativePathname = $file->getRelativePathname();
-
-                    if (
-                        str_contains($relativePathname, '/Tests/') // don't touch test files, as massive change with little benefit - as outside of public contract anyway
-                           || str_contains($relativePathname, '/Test/') // public namespace not following the rule, do not mistake it with `/Tests/`
-                           || str_starts_with($relativePathname, 'Symfony/Contracts/') // rule not yet followed in current MAJOR
-                    ) {
-                        return false;
-                    }
-
-                    return true;
-                },
-            ];
-        }
-    })
     ->setRiskyAllowed(true)
     ->setFinder(
         (new PhpCsFixer\Finder())
@@ -108,6 +55,7 @@ return (new PhpCsFixer\Config())
             ->append([__FILE__])
             ->notPath('#/Fixtures/#')
             ->exclude([
+                'Symfony/Bridge/PhpUnit/',
                 'Symfony/Component/Emoji/Resources/',
                 'Symfony/Component/Intl/Resources/data/',
             ])
