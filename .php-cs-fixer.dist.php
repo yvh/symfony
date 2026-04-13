@@ -13,35 +13,95 @@ if (!file_exists(__DIR__.'/src')) {
     exit(0);
 }
 
-$fileHeaderComment = <<<'EOF'
-This file is part of the Symfony package.
+$fileHeaderParts = [
+    <<<'EOF'
+        This file is part of the Symfony package.
 
-(c) Fabien Potencier <fabien@symfony.com>
+        (c) Fabien Potencier <fabien@symfony.com>
 
-For the full copyright and license information, please view the LICENSE
-file that was distributed with this source code.
-EOF;
+        EOF,
+    <<<'EOF'
+
+        For the full copyright and license information, please view the LICENSE
+        file that was distributed with this source code.
+        EOF,
+];
 
 return (new PhpCsFixer\Config())
-    // @see https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/pull/7777
     ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->setRules([
-        '@PHP7x1Migration' => true, // take lowest version from `git grep -h '"php"' **/composer.json | uniq | sort`
-        '@PHPUnit7x5Migration:risky' => true, // take version from src/Symfony/Bridge/PhpUnit/phpunit.xml.dist#L4
+        '@PHP8x1Migration' => true, // take lowest version from `git grep -h '"php"' **/composer.json | uniq | sort`
+        '@PHP8x1Migration:risky' => true,
+        '@PHPUnit9x1Migration:risky' => true, // take version from src/Symfony/Bridge/PhpUnit/phpunit.xml.dist#L4
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        'phpdoc_var_annotation_correct_order' => true,
-        'protected_to_private' => true,
-        'no_superfluous_phpdoc_tags' => [
-            'remove_inheritdoc' => true,
-            'allow_unused_params' => true, // for future-ready params, to be replaced with https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues/7377
+        'header_comment' => [
+            'header' => implode('', $fileHeaderParts),
+            'validator' => implode('', [
+                '/',
+                preg_quote($fileHeaderParts[0], '/'),
+                '(?P<EXTRA>.*)??',
+                preg_quote($fileHeaderParts[1], '/'),
+                '/s',
+            ]),
         ],
-        'header_comment' => ['header' => $fileHeaderComment],
-        'nullable_type_declaration' => true,
-        'nullable_type_declaration_for_default_null_value' => true,
-        'modernize_strpos' => true,
-        'get_class_to_class_keyword' => true,
+        'php_unit_attributes' => true,
     ])
+    ->setRuleCustomisationPolicy(new class implements PhpCsFixer\Config\RuleCustomisationPolicyInterface {
+        public function getPolicyVersionForCache(): string
+        {
+            return hash_file('xxh128', __FILE__);
+        }
+
+        public function getRuleCustomisers(): array
+        {
+            return [
+                'php_unit_attributes' => static function (SplFileInfo $file) {
+                    // temporary hack due to bug: https://github.com/symfony/symfony/issues/62734
+                    if (!$file instanceof Symfony\Component\Finder\SplFileInfo) {
+                        return false;
+                    }
+
+                    $relativePathname = $file->getRelativePathname();
+
+                    // For packages/namespaces that are part of public API and
+                    // as such are not bound to any specific PHPUnit version,
+                    // we have to keep both annotations and attributes.
+                    if (
+                        str_starts_with($relativePathname, 'Symfony/Bridge/PhpUnit/')
+                        || str_starts_with($relativePathname, 'Symfony/Contracts/')
+                        || str_contains($relativePathname, '/Test/') // public namespace, do not mistake it with `/Tests/`
+                    ) {
+                        $fixer = new PhpCsFixer\Fixer\PhpUnit\PhpUnitAttributesFixer();
+                        $fixer->configure(['keep_annotations' => true]);
+
+                        return $fixer;
+                    }
+
+                    // Keep the default configuration for other files
+                    return true;
+                },
+                'void_return' => static function (SplFileInfo $file) {
+                    // temporary hack due to bug: https://github.com/symfony/symfony/issues/62734
+                    if (!$file instanceof Symfony\Component\Finder\SplFileInfo) {
+                        return false;
+                    }
+
+                    $relativePathname = $file->getRelativePathname();
+
+                    if (
+                        str_contains($relativePathname, '/Tests/') // don't touch test files, as massive change with little benefit - as outside of public contract anyway
+                           || str_contains($relativePathname, '/Test/') // public namespace not following the rule, do not mistake it with `/Tests/`
+                           || str_starts_with($relativePathname, 'Symfony/Contracts/') // rule not yet followed in current MAJOR
+                    ) {
+                        return false;
+                    }
+
+                    return true;
+                },
+            ];
+        }
+    })
     ->setRiskyAllowed(true)
     ->setFinder(
         (new PhpCsFixer\Finder())
@@ -49,33 +109,17 @@ return (new PhpCsFixer\Config())
             ->append([__FILE__])
             ->notPath('#/Fixtures/#')
             ->exclude([
-                // explicit trigger_error tests
-                'Symfony/Bridge/PhpUnit/Tests/DeprecationErrorHandler/',
+                'Symfony/Component/Emoji/Resources/',
                 'Symfony/Component/Intl/Resources/data/',
             ])
-            // explicit tests for omitted @param type, against `no_superfluous_phpdoc_tags`
-            ->notPath('Symfony/Component/PropertyInfo/Tests/Extractor/PhpDocExtractorTest.php')
-            ->notPath('Symfony/Component/PropertyInfo/Tests/Extractor/PhpStanExtractorTest.php')
             // Support for older PHPunit version
-            ->notPath('Symfony/Bridge/PhpUnit/SymfonyTestsListener.php')
             ->notPath('#Symfony/Bridge/PhpUnit/.*Mock\.php#')
             ->notPath('#Symfony/Bridge/PhpUnit/.*Legacy#')
-            // file content autogenerated by `var_export`
-            ->notPath('Symfony/Component/Translation/Tests/Fixtures/resources.php')
-            // explicit trigger_error tests
-            ->notPath('Symfony/Component/ErrorHandler/Tests/DebugClassLoaderTest.php')
-            // stop removing spaces on the end of the line in strings
-            ->notPath('Symfony/Component/Messenger/Tests/Command/FailedMessagesShowCommandTest.php')
             // auto-generated proxies
-            ->notPath('Symfony/Component/Cache/Traits/RelayProxy.php')
-            ->notPath('Symfony/Component/Cache/Traits/Redis5Proxy.php')
-            ->notPath('Symfony/Component/Cache/Traits/Redis6Proxy.php')
-            ->notPath('Symfony/Component/Cache/Traits/RedisCluster5Proxy.php')
-            ->notPath('Symfony/Component/Cache/Traits/RedisCluster6Proxy.php')
+            ->notPath('#Symfony/Component/Cache/Traits/Re.*Proxy\.php#')
             // svg
             ->notPath('Symfony/Component/ErrorHandler/Resources/assets/images/symfony-ghost.svg.php')
             // HTML templates
             ->notPath('#Symfony/.*\.html\.php#')
     )
-    ->setCacheFile('.php-cs-fixer.cache')
 ;
