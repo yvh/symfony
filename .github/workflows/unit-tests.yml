@@ -237,13 +237,13 @@ jobs:
         run: |
           mkdir build
           cd build
-          wget -q https://github.com/symfony/binary-utils/releases/download/v0.1/php-8.4.0-pcntl-sigchild.tar.bz2
-          tar -xjf php-8.4.0-pcntl-sigchild.tar.bz2
+          wget -q https://github.com/symfony/binary-utils/releases/download/v0.1/php-8.4.1-pcntl-sigchild.tar.bz2
+          tar -xjf php-8.4.1-pcntl-sigchild.tar.bz2
           cd ..
 
           mkdir -p /opt/php/lib
           echo memory_limit=-1 > /opt/php/lib/php.ini
-          SYMFONY_PHPUNIT_VERSION=12 ./phpunit install
+          ./phpunit install
           ./build/php/bin/php ./phpunit src/Symfony/Component/Process
 
       - name: Run PhpUnitBridge tests with PHPUnit 9.6
