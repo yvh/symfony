@@ -45,7 +45,6 @@ return (new PhpCsFixer\Config())
                 '/s',
             ]),
         ],
-        'php_unit_attributes' => true,
     ])
     ->setRuleCustomisationPolicy(new class implements PhpCsFixer\Config\RuleCustomisationPolicyInterface {
         public function getPolicyVersionForCache(): string
