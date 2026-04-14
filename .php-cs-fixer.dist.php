@@ -45,6 +45,7 @@ return (new PhpCsFixer\Config())
                 '/s',
             ]),
         ],
+        'modern_serialization_methods' => false,
         'php_unit_attributes' => true,
     ])
     ->setRuleCustomisationPolicy(new class implements PhpCsFixer\Config\RuleCustomisationPolicyInterface {
