@@ -24,7 +24,7 @@ if (!getenv('SYMFONY_PHPUNIT_VERSION')) {
         putenv('SYMFONY_PHPUNIT_VERSION=11.5');
     }
 }
-if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<') && is_file($file = './phpunit.xml.dist')) {
+if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<') && is_file($file = realpath('./phpunit.xml.dist'))) {
     $target = substr($file, 0, -5);
     $content = file_get_contents($file);
     $content = str_replace('<deprecationTrigger ignoreUndefinedTriggers="true">', '<deprecationTrigger>', $content);
@@ -33,7 +33,13 @@ if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<') && is_file($fi
         $content = str_replace('<method>Doctrine\Deprecations\Deprecation::trigger</method>', '', $content);
         $content = str_replace('<method>Doctrine\Deprecations\Deprecation::triggerIfCalledFromOutside</method>', '', $content);
     }
-    file_put_contents($target, $content);
+    $lock = fopen($file, 'r');
+    flock($lock, LOCK_EX);
+    if (!is_file($target) || file_get_contents($target) !== $content) {
+        file_put_contents($target, $content);
+    }
+    flock($lock, LOCK_UN);
+    fclose($lock);
 }
 if (!getenv('SYMFONY_PATCH_TYPE_DECLARATIONS')) {
     putenv('SYMFONY_PATCH_TYPE_DECLARATIONS=deprecations=1');
@@ -42,10 +48,4 @@ if (getcwd() === realpath(__DIR__.'/src/Symfony/Bridge/PhpUnit')) {
     putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
 }
 putenv('SYMFONY_PHPUNIT_DIR='.__DIR__.'/.phpunit');
-try {
-    require __DIR__.'/vendor/symfony/phpunit-bridge/bin/simple-phpunit';
-} finally {
-    if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<')) {
-        @unlink('./phpunit.xml');
-    }
-}
+require __DIR__.'/vendor/symfony/phpunit-bridge/bin/simple-phpunit';
