@@ -24,7 +24,10 @@ if (!getenv('SYMFONY_PHPUNIT_VERSION')) {
         putenv('SYMFONY_PHPUNIT_VERSION=11.5');
     }
 }
-if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<') && is_file($file = realpath('./phpunit.xml.dist'))) {
+(static function () {
+    if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '>=') || !is_file($file = realpath('./phpunit.xml.dist'))) {
+        return;
+    }
     $target = substr($file, 0, -5);
     $content = file_get_contents($file);
     $content = str_replace('<deprecationTrigger ignoreUndefinedTriggers="true">', '<deprecationTrigger>', $content);
@@ -40,7 +43,7 @@ if (version_compare(getenv('SYMFONY_PHPUNIT_VERSION'), '13', '<') && is_file($fi
     }
     flock($lock, LOCK_UN);
     fclose($lock);
-}
+})();
 if (!getenv('SYMFONY_PATCH_TYPE_DECLARATIONS')) {
     putenv('SYMFONY_PATCH_TYPE_DECLARATIONS=deprecations=1');
 }
