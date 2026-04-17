@@ -112,6 +112,7 @@ return (new PhpCsFixer\Config())
             ->exclude([
                 'Symfony/Component/Emoji/Resources/',
                 'Symfony/Component/Intl/Resources/data/',
+                'Symfony/Component/String/Resources/data/',
             ])
             // Support for older PHPunit version
             ->notPath('#Symfony/Bridge/PhpUnit/.*Mock\.php#')
