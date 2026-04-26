@@ -132,3 +132,8 @@ Uid
 ---
 
  * Add argument `$format` to `Ulid::isValid()`
+
+VarExporter
+-----------
+
+ * Deprecate `Hydrator` and `Instantiator` classes, use `deepclone_hydrate()` from the deepclone extension instead
