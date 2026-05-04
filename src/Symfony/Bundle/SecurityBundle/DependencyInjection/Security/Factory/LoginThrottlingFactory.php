@@ -76,6 +76,8 @@ class LoginThrottlingFactory implements AuthenticatorFactoryInterface
             ];
             $this->registerRateLimiter($container, $localId = '_login_local_'.$firewallName, $limiterOptions);
 
+            $this->registerRateLimiter($container, $usernameId = '_login_username_'.$firewallName, $limiterOptions);
+
             $limiterOptions['limit'] = 5 * $config['max_attempts'];
             $this->registerRateLimiter($container, $globalId = '_login_global_'.$firewallName, $limiterOptions);
 
@@ -83,6 +85,7 @@ class LoginThrottlingFactory implements AuthenticatorFactoryInterface
                 ->addArgument(new Reference('limiter.'.$globalId))
                 ->addArgument(new Reference('limiter.'.$localId))
                 ->addArgument(new Parameter('container.build_hash'))
+                ->addArgument(new Reference('limiter.'.$usernameId))
             ;
         }
 
