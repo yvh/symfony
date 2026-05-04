@@ -109,6 +109,7 @@ Messenger
  * Receivers no longer delete messages from the queue on decode failure;
    they are routed through the normal retry/failure transport path instead
  * Add argument `$fetchSize` to `ReceiverInterface::get()` and `QueueReceiverInterface::getFromQueues()`
+ * Deprecate `StopWorkerOnTimeLimitListener` in favor of using the `time_limit` worker option
 
 Security
 --------
