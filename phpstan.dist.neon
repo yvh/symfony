@@ -9,11 +9,11 @@ parameters:
     paths:
         - src
     excludePaths:
-        - src/Symfony/*/*/Tests
-        - src/Symfony/*/*/*/Tests
-        - src/Symfony/*/*/*/*/Tests
-        - src/Symfony/Component/Intl/Resources/data
-        - src/Symfony/Component/Emoji/Resources/data
+        - src/Symfony/*/*/Tests/*
+        - src/Symfony/*/*/*/Tests/*
+        - src/Symfony/*/*/*/*/Tests/*
+        - src/Symfony/Component/Intl/Resources/data/*
+        - src/Symfony/Component/Emoji/Resources/data/*
     ignoreErrors:
         # Added in PHP 8.4
         - '#^Class BcMath\\Number not found\.$#'
