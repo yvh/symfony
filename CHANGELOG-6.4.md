@@ -7,6 +7,18 @@ in 6.4 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v6.4.0...v6.4.1
 
+* 6.4.38 (2026-05-06)
+
+ * bug #63761 [Scheduler] Fix checkpoint state expiring when cache has default TTL (Amoifr)
+ * bug #64138 [Translation] Fix `TranslationPushCommand::getDomainsFromTranslatorBag` (MatTheCat)
+ * bug #63757 [Messenger][AmazonSqs] Do not override queue-level DelaySeconds when no DelayStamp is set (psantus)
+ * bug #64122 [Cache] Ensure compatibility with Relay extension 0.22.0 (nicolas-grekas)
+ * bug #64119 [Yaml] fix flow collection drops `&anchor` and `!!str &anchor` items (ousamabenyounes)
+ * bug #64086 [Messenger] Move `--time-limit` handling to Worker for proper capping with `--sleep` (Toflar)
+ * bug #64100 [Translation] URL-encode tmp path in XliffUtils::shouldEnableEntityLoader (ousamabenyounes)
+ * bug #64095 [RateLimiter] Carry over reserved tokens past fixed window resets (ousamabenyounes)
+ * bug #64099 [Ldap] Cast `default_socket_timeout` to `int` (ousamabenyounes)
+
 * 6.4.37 (2026-05-01)
 
  * bug #64090 [DependencyInjection] Reject circular references through a factory builder's setup (nicolas-grekas)
