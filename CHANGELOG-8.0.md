@@ -7,6 +7,25 @@ in 8.0 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v8.0.0...v8.0.1
 
+* 8.0.10 (2026-05-06)
+
+ * bug #63761 [Scheduler] Fix checkpoint state expiring when cache has default TTL (Amoifr)
+ * bug #64141 [DependencyInjection] Fix lazy-autowiring an already-lazy service (nicolas-grekas)
+ * bug #64138 [Translation] Fix `TranslationPushCommand::getDomainsFromTranslatorBag` (MatTheCat)
+ * bug #63744 [Validator] Fix Compound constraint with nested Composite and validation groups (Amoifr)
+ * bug #63757 [Messenger][AmazonSqs] Do not override queue-level DelaySeconds when no DelayStamp is set (psantus)
+ * bug #64122 [Cache] Ensure compatibility with Relay extension 0.22.0 (nicolas-grekas)
+ * bug #64119 [Yaml] fix flow collection drops `&anchor` and `!!str &anchor` items (ousamabenyounes)
+ * bug #64016 [Mailer][AzureMailer] Fix inline attachments (kohlerdominik)
+ * bug #64086 [Messenger] Move `--time-limit` handling to Worker for proper capping with `--sleep` (Toflar)
+ * bug #63858 [Cache] Remove conflict with dbal<4.3 (flack)
+ * bug #64103 [AssetMapper] Stop baking CSP nonce into the importmap polyfill body (ousamabenyounes)
+ * bug #64106 [Config] Normalize `backed-enum` in array shapes (MatTheCat)
+ * bug #64100 [Translation] URL-encode tmp path in XliffUtils::shouldEnableEntityLoader (ousamabenyounes)
+ * bug #64095 [RateLimiter] Carry over reserved tokens past fixed window resets (ousamabenyounes)
+ * bug #64111 [Serializer] Fix low deps (nicolas-grekas)
+ * bug #64099 [Ldap] Cast `default_socket_timeout` to `int` (ousamabenyounes)
+
 * 8.0.9 (2026-05-01)
 
  * bug #64090 [DependencyInjection] Reject circular references through a factory builder's setup (nicolas-grekas)
