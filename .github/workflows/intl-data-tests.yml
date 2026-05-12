@@ -2,6 +2,7 @@ name: Intl data
 
 on:
   push:
+    branches: [ '*.*' ]
     paths:
       - 'src/Symfony/Component/Intl/*.php'
       - 'src/Symfony/Component/Intl/Util/GitRepository.php'
