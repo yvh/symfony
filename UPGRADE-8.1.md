@@ -111,6 +111,7 @@ Messenger
    they are routed through the normal retry/failure transport path instead
  * Add argument `$fetchSize` to `ReceiverInterface::get()` and `QueueReceiverInterface::getFromQueues()`
  * Deprecate `StopWorkerOnTimeLimitListener` in favor of using the `time_limit` worker option
+ * Add `forceRetry()` method to `RecoverableExceptionInterface`
 
 Security
 --------
