@@ -7,6 +7,37 @@ in 8.1 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v8.1.0...v8.1.1
 
+* 8.1.0-BETA2 (2026-05-13)
+
+ * bug #64198 [SecurityBundle] Allow defining security provider factories without config (hockdudu)
+ * bug #64189 [FrameworkBundle] Bump Request/Session value resolver priority above EntityValueResolver (ousamabenyounes)
+ * bug #64197 [Messenger] Ensure SigningSerializer won't decode before verifying the signature (nicolas-grekas)
+ * bug #64195 [Security] Remove the legacy nested unserialize() call from token and exception classes (nicolas-grekas)
+ * bug #64196 [Yaml] Reject non-stringables when using "!!binary" (nicolas-grekas)
+ * bug #64191 [Inflector][String] Fixed singularize `traces` > `trace` (ruudk)
+ * bug #64192 [Mailer] Use `hash_equals()` to compare webhook signatures for AhaSend (alexandre-daubois)
+ * bug #64193 [Notifier] Use `hash_equals()` to compare webhook signatures for Vonage (alexandre-daubois)
+ * bug #64180 [Messenger][Amqp] Fix support for RabbitMQ v4 by adding delayed quorum queues (Jean85)
+ * bug #64187 [AssetMapper] Warn on missing bare CSS and JSON imports (ousamabenyounes)
+ * feature #61936 [Messenger] Allow to respect retry strategy with `RecoverableMessageHandlingException` (VincentLanglet)
+ * bug #64182 [Console] Fix signal handler scoping (jpollard3)
+ * bug #64181 [Security] Preserve webserver base URL in HttpUtils::createRequest() (ousamabenyounes)
+ * bug #64058 [Process] Ignore array env values before proc_open (dionisvl)
+ * bug #64179 [Filesystem] preserve source mode when copying files (nicolas-grekas)
+ * bug #64176 [Console] Make `ConsoleSectionOutput::overwrite()` atomic to fix sections + ProgressIndicator clear (Amoifr)
+ * feature #63770 [HttpClient] Add custom DNS resolution using a decorator (peter17)
+ * bug #64158 [Form] Fix array_flip() warning in expanded+multiple ChoiceType on partial submit (SAY-5)
+ * feature #64156 [Validator] Add findByCodes() to ConstraintViolationListInterface (michaelthieulin)
+ * feature #64160 [HttpClient] Add $allowList argument to NoPrivateNetworkHttpClient (Amoifr)
+ * feature #64163 [HttpClient] Log stale-if-error fallback in CachingHttpClient (ousamabenyounes)
+ * bug #64174 [Scheduler] Use stored checkpoint as base date for debug:scheduler (ousamabenyounes)
+ * bug #64153 [Messenger] Drop trace args from FlattenException normalization (ousamabenyounes)
+ * bug #64150 [HttpKernel] Use backend-handled request for terminate listeners in HttpCache (Toflar)
+ * bug #64172 [WebProfilerBundle] Don’t try to access `RawMessage::$headers` (MatTheCat)
+ * bug #64148 [Dotenv] Don't truncate OS env vars containing $ when $_ENV is unpopulated (HMAZonderland)
+ * feature #60298 [Messenger][Amqp] delayed quorum queues (Miquel Fontana, miquel-angel)
+ * bug #64167 [Console] Add missing `symfony/polyfill-php85` dependency (Amoifr)
+
 * 8.1.0-BETA1 (2026-05-06)
 
  * feature #63751 [DependencyInjection][HttpKernel] Add support for resetting non-shared services (Pechynho)
