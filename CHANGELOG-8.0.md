@@ -7,6 +7,29 @@ in 8.0 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v8.0.0...v8.0.1
 
+* 8.0.11 (2026-05-13)
+
+ * bug #64198 [SecurityBundle] Allow defining security provider factories without config (hockdudu)
+ * bug #64189 [FrameworkBundle] Bump Request/Session value resolver priority above EntityValueResolver (ousamabenyounes)
+ * bug #64197 [Messenger] Ensure SigningSerializer won't decode before verifying the signature (nicolas-grekas)
+ * bug #64195 [Security] Remove the legacy nested unserialize() call from token and exception classes (nicolas-grekas)
+ * bug #64196 [Yaml] Reject non-stringables when using "!!binary" (nicolas-grekas)
+ * bug #64191 [Inflector][String] Fixed singularize `traces` > `trace` (ruudk)
+ * bug #64192 [Mailer] Use `hash_equals()` to compare webhook signatures for AhaSend (alexandre-daubois)
+ * bug #64193 [Notifier] Use `hash_equals()` to compare webhook signatures for Vonage (alexandre-daubois)
+ * bug #64180 [Messenger][Amqp] Fix support for RabbitMQ v4 by adding delayed quorum queues (Jean85)
+ * bug #64187 [AssetMapper] Warn on missing bare CSS and JSON imports (ousamabenyounes)
+ * bug #64182 [Console] Fix signal handler scoping (jpollard3)
+ * bug #64181 [Security] Preserve webserver base URL in HttpUtils::createRequest() (ousamabenyounes)
+ * bug #64058 [Process] Ignore array env values before proc_open (dionisvl)
+ * bug #64179 [Filesystem] preserve source mode when copying files (nicolas-grekas)
+ * bug #64176 [Console] Make `ConsoleSectionOutput::overwrite()` atomic to fix sections + ProgressIndicator clear (Amoifr)
+ * bug #64174 [Scheduler] Use stored checkpoint as base date for debug:scheduler (ousamabenyounes)
+ * bug #64153 [Messenger] Drop trace args from FlattenException normalization (ousamabenyounes)
+ * bug #64150 [HttpKernel] Use backend-handled request for terminate listeners in HttpCache (Toflar)
+ * bug #64172 [WebProfilerBundle] Don’t try to access `RawMessage::$headers` (MatTheCat)
+ * bug #64148 [Dotenv] Don't truncate OS env vars containing $ when $_ENV is unpopulated (HMAZonderland)
+
 * 8.0.10 (2026-05-06)
 
  * bug #63761 [Scheduler] Fix checkpoint state expiring when cache has default TTL (Amoifr)
