@@ -12,6 +12,7 @@
 namespace Symfony\Component\Notifier\Bridge\Prelude\Tests;
 
 use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\JsonMockResponse;
 use Symfony\Component\Notifier\Bridge\Prelude\PreludeOptions;
 use Symfony\Component\Notifier\Bridge\Prelude\PreludeTransport;
 use Symfony\Component\Notifier\Exception\LogicException;
@@ -74,5 +75,38 @@ final class PreludeTransportTest extends TransportTestCase
         $this->expectExceptionMessage('The "template_id" option is required');
 
         $transport->send(new SmsMessage('phone', 'testMessage'));
+    }
+
+    public function testSendWithOptions()
+    {
+        $expectedBody = [
+            'to' => '+33612345678',
+            'from' => '0611223344',
+            'template_id' => 'tpl_123',
+            'variables' => ['order_id' => '12345'],
+            'locale' => 'fr-FR',
+        ];
+
+        $client = new MockHttpClient(function (string $method, string $url, array $options = []) use ($expectedBody): ResponseInterface {
+            $this->assertSame('POST', $method);
+            $this->assertSame('https://host.test/v2/notify', $url);
+            $this->assertContains('Authorization: Bearer api-key', $options['headers']);
+            $this->assertEqualsCanonicalizing($expectedBody, json_decode($options['body'], true));
+
+            return new JsonMockResponse(['id' => 'msg_abc123'], ['http_code' => 200]);
+        });
+
+        $sentMessage = self::createTransport($client)->send(new SmsMessage(
+            '+33612345678',
+            'testMessage',
+            '',
+            (new PreludeOptions())
+                ->templateId('tpl_123')
+                ->variables(['order_id' => '12345'])
+                ->locale('fr-FR'),
+        ));
+
+        $this->assertSame('msg_abc123', $sentMessage->getMessageId());
+        $this->assertSame('prelude://host.test?sender=0611223344', $sentMessage->getTransport());
     }
 }
