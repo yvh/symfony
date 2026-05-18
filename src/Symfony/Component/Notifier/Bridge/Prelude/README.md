@@ -27,18 +27,18 @@ The Prelude Notify API **requires** a `template_id`. You must use `PreludeOption
 use Symfony\Component\Notifier\Message\SmsMessage;
 use Symfony\Component\Notifier\Bridge\Prelude\PreludeOptions;
 
-$options = new PreludeOptions(
-    templateId: 'template_01k8xxxxxxxxxxxxx', // Required
-    variables: [
+$options = (new PreludeOptions())
+    ->templateId('template_01k8xxxxxxxxxxxxx') // Required
+    ->variables([
         'order_id' => '12345',
         'amount' => '$49.99',
-    ],
+    ])
     // Optional parameters
-    // from: 'MySenderID',
-    // locale: 'fr-FR',
-    // callbackUrl: 'https://example.com/webhook',
-    // preferredChannel: 'whatsapp'
-);
+    // ->from('MySenderID')
+    // ->locale('fr-FR')
+    // ->callbackUrl('https://example.com/webhook')
+    // ->preferredChannel('whatsapp')
+;
 
 $message = (new SmsMessage('+33612345678', 'Subject (ignored)'))
     ->options($options);
