@@ -34,6 +34,11 @@ DoctrineBridge
 
  * Deprecate setting an `$aliasMap` in `RegisterMappingsPass`. Namespace aliases are no longer supported in Doctrine.
 
+DomCrawler
+----------
+
+ * Always set `LIBXML_NONET` in `Crawler::addXmlContent()` so external entities cannot trigger network requests
+
 ErrorHandler
 ------------
 
