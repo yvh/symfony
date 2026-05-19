@@ -84,6 +84,7 @@ HttpFoundation
 --------------
 
  * Deprecate setting public properties of `Request` and `Response` objects directly; use setters or constructor arguments instead
+ * `ParameterBag::getInt()` and `ParameterBag::getBoolean()` now throw `UnexpectedValueException` instead of silently returning `0`/`false` when the value cannot be converted
 
 HttpKernel
 ----------
