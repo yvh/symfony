@@ -7,6 +7,20 @@ in 5.4 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v5.4.0...v5.4.1
 
+* 5.4.52 (2026-05-20)
+
+ * security #cve-2026-46626 [Runtime] Fix CVE-2024-50340 patch bypass by gating argv on $_SERVER['QUERY_STRING'] (nicolas-grekas)
+ * security #cve-2026-45305 [Yaml] Harden the Parser::cleanup() regexes against catastrophic backtracking (nicolas-grekas)
+ * security #cve-2026-45304 [Yaml] Bound collection-alias resolution in the parser (nicolas-grekas)
+ * security #cve-2026-45133 [Yaml] Bound recursion depth in the parser (nicolas-grekas)
+ * security #cve-2026-45071 [DomCrawler] Fix XXE in addXmlContent() by not enabling `validateOnParse` (alexandre-daubois)
+ * security #cve-2026-45068 [Mailer] Add end-of-options separator before recipients in SendmailTransport; reject addresses starting with a dash (alexandre-daubois)
+ * security #cve-2026-45063 [Security] Anchor emailAddress regex to RDN boundary in X509Authenticator (alexandre-daubois)
+ * security #cve-2026-45065 [Routing] Fix regex alternation anchoring in `UrlGenerator` requirement validation (alexandre-daubois)
+ * security #cve-2026-45067 [Mime] Reject email addresses containing line breaks in Address (alexandre-daubois)
+ * security #cve-2026-45073 [Cache] Validate the prefix given to AbstractAdapter::clear() (nicolas-grekas)
+ * security #cve-2026-45077 [MonologBridge] Bind server:log to localhost by default (nicolas-grekas)
+
 * 5.4.51 (2026-01-28)
 
  * security #cve-2026-24739 [Process] Fix escaping for MSYS on Windows (nicolas-grekas)
