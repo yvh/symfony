@@ -7,6 +7,37 @@ in 7.4 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v7.4.0...v7.4.1
 
+* 7.4.12 (2026-05-20)
+
+ * security #cve-2026-46626 [Runtime] Fix CVE-2024-50340 patch bypass by gating argv on $_SERVER['QUERY_STRING'] (nicolas-grekas)
+ * security #cve-2026-45754 [Notifier][Lox24] Reject webhooks with missing or invalid token (nicolas-grekas)
+ * security #cve-2026-47212 [Notifier][Twilio] Reject webhooks with missing or invalid HMAC signature (nicolas-grekas)
+ * security #cve-2026-45753 [HtmlSanitizer] Sanitize URLs in action, formaction, poster and cite attributes (nicolas-grekas)
+ * security #cve-2026-45754 [Mailer][Mailjet] Reject webhooks with missing or invalid Basic credentials (alexandre-daubois)
+ * security #cve-2026-45072 [TwigBridge] Fix XSS issue in CodeExtension::fileExcerpt() (nicolas-grekas)
+ * security #cve-2026-45064 [HtmlSanitizer] Reject BiDi override characters and percent-encode spaces in URLs (nicolas-grekas)
+ * security #cve-2026-45066 [HtmlSanitizer] Fix `allowLinkHosts`/`allowMediaHosts` bypass via URL parser differentials and `<area>` misclassification (alexandre-daubois)
+ * security #cve-2026-45069 [Security] Add missing claims in `OidcTokenHandler` (alexandre-daubois)
+ * bug #64258 [DomCrawler] Fix `ChoiceFormField::addChoice()` clobbering values on multi-selects (nicolas-grekas)
+ * bug #64214 [HttpKernel] Preserve named-attribute override on Request/Session value resolvers (nicolas-grekas)
+ * security #cve-2026-45305 [Yaml] Harden the Parser::cleanup() regexes against catastrophic backtracking (nicolas-grekas)
+ * security #cve-2026-45304 [Yaml] Bound collection-alias resolution in the parser (nicolas-grekas)
+ * security #cve-2026-45133 [Yaml] Bound recursion depth in the parser (nicolas-grekas)
+ * security #cve-2026-45071 [DomCrawler] Fix XXE in addXmlContent() by not enabling `validateOnParse` (alexandre-daubois)
+ * security #cve-2026-45068 [Mailer] Add end-of-options separator before recipients in SendmailTransport; reject addresses starting with a dash (alexandre-daubois)
+ * security #cve-2026-45063 [Security] Anchor emailAddress regex to RDN boundary in X509Authenticator (alexandre-daubois)
+ * security #cve-2026-45065 [Routing] Fix regex alternation anchoring in `UrlGenerator` requirement validation (alexandre-daubois)
+ * security #cve-2026-45067 [Mime] Reject email addresses containing line breaks in Address (alexandre-daubois)
+ * security #cve-2026-45073 [Cache] Validate the prefix given to AbstractAdapter::clear() (nicolas-grekas)
+ * security #cve-2026-45077 [MonologBridge] Bind server:log to localhost by default (nicolas-grekas)
+ * security #cve-2026-45755 [Mailer][Mailtrap] Reject webhooks with missing or invalid HMAC signature (alexandre-daubois)
+ * security #cve-2026-45756 [JsonPath] Cap regex backtracking in `match()`/`search()` to prevent ReDoS (alexandre-daubois)
+ * security #cve-2026-45074 [Security] Require configuring trusted hosts when using CAS authentication (nicolas-grekas)
+ * security #cve-2026-45075 [Security][HttpKernel] Fix HEAD requests bypassing methods filter in `IsGranted`, `IsCsrfTokenValid` and `IsSignatureValid` attributes (nicolas-grekas)
+ * bug #64261 [Messenger] Fix PhpSerializer::getMessageType() when getting payload with Serializable instances (nicolas-grekas)
+ * bug #64207 [MonologBridge] Fix `interactive_only` not preventing propagation (philbates35)
+ * bug #64213 [Security] Fix impersonation being deauthenticated on every request (nicolas-grekas)
+
 * 7.4.11 (2026-05-13)
 
  * bug #64198 [SecurityBundle] Allow defining security provider factories without config (hockdudu)
