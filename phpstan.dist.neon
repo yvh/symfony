@@ -9,6 +9,7 @@ parameters:
     paths:
         - src
     excludePaths:
+        - src/Symfony/*/Tests/*
         - src/Symfony/*/*/Tests/*
         - src/Symfony/*/*/*/Tests/*
         - src/Symfony/*/*/*/*/Tests/*
