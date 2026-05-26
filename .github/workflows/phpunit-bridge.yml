@@ -23,7 +23,7 @@ permissions:
 jobs:
   lint:
     name: Lint PhpUnitBridge
-    runs-on: Ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
