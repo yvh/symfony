@@ -35,7 +35,7 @@ jobs:
           git config --global user.name "Symfony"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 2
 
