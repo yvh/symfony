@@ -7,6 +7,15 @@ in 5.4 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v5.4.0...v5.4.1
 
+* 5.4.53 (2026-05-27)
+
+ * security #cve-2026-48736 [HttpClient] Block IPv6 transition forms in NoPrivateNetworkHttpClient (nicolas-grekas)
+ * security #cve-2026-48489 [Security] Don't honor user-supplied _failure_path on failure_forward (nicolas-grekas)
+ * security #cve-2026-48784 [Routing] Fix dot-segment encoding for chained "../" and "./" in generated URLs (nicolas-grekas)
+ * bug #64346 [Runtime] Trust argv on CLI-like SAPIs to fix subprocess args (nicolas-grekas)
+ * bug #64336 [Cache] Accept '_' and ':' in prefix passed to AbstractAdapter::clear() (nicolas-grekas)
+ * bug #64316 [Yaml] Allow trailing newlines after the end-of-document marker (nicolas-grekas)
+
 * 5.4.52 (2026-05-20)
 
  * security #cve-2026-46626 [Runtime] Fix CVE-2024-50340 patch bypass by gating argv on $_SERVER['QUERY_STRING'] (nicolas-grekas)
