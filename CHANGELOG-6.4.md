@@ -7,6 +7,31 @@ in 6.4 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v6.4.0...v6.4.1
 
+* 6.4.41 (2026-05-27)
+
+ * security #cve-2026-48761 [HtmlSanitizer] Sanitize URL attributes on <object>, <applet>, <iframe>, <img>, and the URL inside <meta http-equiv="refresh"> content (nicolas-grekas)
+ * security #cve-2026-48760 [HtmlSanitizer] Reject percent-encoded BiDi marks and Unicode whitespace in URLs (nicolas-grekas)
+ * security #cve-2026-48736 [HttpFoundation] Block IPv6 transition forms in IpUtils::PRIVATE_SUBNETS (nicolas-grekas)
+ * security #cve-2026-48736 [HttpClient] Block IPv6 transition forms in NoPrivateNetworkHttpClient (nicolas-grekas)
+ * security #cve-2026-48489 [Security] Don't honor user-supplied _failure_path on failure_forward (nicolas-grekas)
+ * security #cve-2026-48784 [Routing] Fix dot-segment encoding for chained "../" and "./" in generated URLs (nicolas-grekas)
+ * bug #64355 [Console] Format message in ConsoleSectionOutput::overwrite() (nicolas-grekas)
+ * bug #64349 [HttpClient] ntlm regression on authPersistNonNTLM=false connections with reset() (Dooij)
+ * bug #64348 [FrameworkBundle] Allow to pass `doctrine_open_transaction_logger`’s entity manager name positionally (MatTheCat)
+ * bug #64335 [Scheduler] Recover pending RecurringMessages after consumer stops midway (ousamabenyounes)
+ * bug #64338 [SecurityBundle] Fix Security::login() across firewalls (ousamabenyounes)
+ * bug #64347 [Process] Stop leaking CGI/FastCGI request-context vars to subprocesses (nicolas-grekas)
+ * bug #64343 [Mime][RateLimiter][Routing][Security] Harden __unserialize against __toString trampolines (nicolas-grekas)
+ * bug #64342 [HtmlSanitizer] Honor universal attribute sanitizers, apply maxInputLength to text contexts, document forceAttribute and allowAttribute caveats (nicolas-grekas)
+ * bug #64341 [FrameworkBundle][Mailer] Harden default IP allowlist for Postmark and Brevo webhook parsers (nicolas-grekas)
+ * bug #64337 [Security] Initialize lazy users before serializing them (MatTheCat)
+ * bug #64346 [Runtime] Trust argv on CLI-like SAPIs to fix subprocess args (nicolas-grekas)
+ * bug #64336 [Cache] Accept '_' and ':' in prefix passed to AbstractAdapter::clear() (nicolas-grekas)
+ * bug #64316 [Yaml] Allow trailing newlines after the end-of-document marker (nicolas-grekas)
+ * bug #64289 [Translation] Don’t check the error message to know if Lokalise keys are missing (MatTheCat)
+ * bug #64208 [AssetMapper] Rewrite relative paths in `export ... from` statements (ousamabenyounes)
+ * bug #64310 [HttpKernel][WebProfilerBundle] Check logs priority name for both `WARNING` and `warning` (MatTheCat)
+
 * 6.4.40 (2026-05-20)
 
  * security #cve-2026-46626 [Runtime] Fix CVE-2024-50340 patch bypass by gating argv on $_SERVER['QUERY_STRING'] (nicolas-grekas)
