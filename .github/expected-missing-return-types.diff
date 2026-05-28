@@ -7,6 +7,26 @@ git checkout src/Symfony/Contracts/Service/ResetInterface.php
 (echo "$head" && echo && git diff -U2 src/ | grep '^index ' -v) > .github/expected-missing-return-types.diff
 git checkout composer.json src/
 
+diff --git a/src/Symfony/Bridge/Doctrine/SchemaListener/AbstractSchemaListener.php b/src/Symfony/Bridge/Doctrine/SchemaListener/AbstractSchemaListener.php
+--- a/src/Symfony/Bridge/Doctrine/SchemaListener/AbstractSchemaListener.php
++++ b/src/Symfony/Bridge/Doctrine/SchemaListener/AbstractSchemaListener.php
+@@ -34,5 +34,5 @@ abstract class AbstractSchemaListener
+      * @return Schema The (possibly new) schema after filtering
+      */
+-    protected function filterSchemaChanges(Schema $schema, Connection $connection, callable $configurator)
++    protected function filterSchemaChanges(Schema $schema, Connection $connection, callable $configurator): Schema
+     {
+         $filter = $connection->getConfiguration()->getSchemaAssetsFilter();
+diff --git a/src/Symfony/Bridge/Doctrine/Security/RememberMe/DoctrineTokenProvider.php b/src/Symfony/Bridge/Doctrine/Security/RememberMe/DoctrineTokenProvider.php
+--- a/src/Symfony/Bridge/Doctrine/Security/RememberMe/DoctrineTokenProvider.php
++++ b/src/Symfony/Bridge/Doctrine/Security/RememberMe/DoctrineTokenProvider.php
+@@ -193,5 +193,5 @@ final class DoctrineTokenProvider implements TokenProviderInterface, TokenVerifi
+      * @return Schema The (possibly new) schema with the table added
+      */
+-    public function configureSchema(Schema $schema, Connection $forConnection, \Closure $isSameDatabase)
++    public function configureSchema(Schema $schema, Connection $forConnection, \Closure $isSameDatabase): Schema
+     {
+         if ($schema->hasTable('rememberme_token')) {
 diff --git a/src/Symfony/Bridge/Twig/Test/Traits/RuntimeLoaderProvider.php b/src/Symfony/Bridge/Twig/Test/Traits/RuntimeLoaderProvider.php
 --- a/src/Symfony/Bridge/Twig/Test/Traits/RuntimeLoaderProvider.php
 +++ b/src/Symfony/Bridge/Twig/Test/Traits/RuntimeLoaderProvider.php
@@ -55,6 +75,16 @@ diff --git a/src/Symfony/Component/BrowserKit/AbstractBrowser.php b/src/Symfony/
 +    protected function filterResponse(object $response): Response
      {
          return $response;
+diff --git a/src/Symfony/Component/Cache/Adapter/DoctrineDbalAdapter.php b/src/Symfony/Component/Cache/Adapter/DoctrineDbalAdapter.php
+--- a/src/Symfony/Component/Cache/Adapter/DoctrineDbalAdapter.php
++++ b/src/Symfony/Component/Cache/Adapter/DoctrineDbalAdapter.php
+@@ -132,5 +132,5 @@ class DoctrineDbalAdapter extends AbstractAdapter implements PruneableInterface
+      * @return Schema The (possibly new) schema with the table added
+      */
+-    public function configureSchema(Schema $schema, Connection $forConnection, \Closure $isSameDatabase)
++    public function configureSchema(Schema $schema, Connection $forConnection, \Closure $isSameDatabase): Schema
+     {
+         if ($schema->hasTable($this->table)) {
 diff --git a/src/Symfony/Component/Console/Command/Command.php b/src/Symfony/Component/Console/Command/Command.php
 --- a/src/Symfony/Component/Console/Command/Command.php
 +++ b/src/Symfony/Component/Console/Command/Command.php
@@ -180,7 +210,7 @@ diff --git a/src/Symfony/Component/DependencyInjection/Extension/PrependExtensio
 diff --git a/src/Symfony/Component/DomCrawler/Crawler.php b/src/Symfony/Component/DomCrawler/Crawler.php
 --- a/src/Symfony/Component/DomCrawler/Crawler.php
 +++ b/src/Symfony/Component/DomCrawler/Crawler.php
-@@ -646,5 +646,5 @@ class Crawler implements \Countable, \IteratorAggregate
+@@ -645,5 +645,5 @@ class Crawler implements \Countable, \IteratorAggregate
       * @return array|static
       */
 -    public function evaluate(string $xpath): array|self
@@ -367,6 +397,16 @@ diff --git a/src/Symfony/Component/Form/Test/TypeTestCase.php b/src/Symfony/Comp
 +    public static function assertDateIntervalEquals(\DateInterval $expected, \DateInterval $actual): void
      {
          self::assertEquals($expected->format('%RP%yY%mM%dDT%hH%iM%sS'), $actual->format('%RP%yY%mM%dDT%hH%iM%sS'));
+diff --git a/src/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.php b/src/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.php
+--- a/src/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.php
++++ b/src/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.php
+@@ -188,5 +188,5 @@ class PdoSessionHandler extends AbstractSessionHandler
+      * @return Schema The (possibly new) schema with the table added
+      */
+-    public function configureSchema(Schema $schema, ?\Closure $isSameDatabase = null)
++    public function configureSchema(Schema $schema, ?\Closure $isSameDatabase = null): Schema
+     {
+         if ($schema->hasTable($this->table) || ($isSameDatabase && !$isSameDatabase($this->getConnection()->exec(...)))) {
 diff --git a/src/Symfony/Component/HttpKernel/Bundle/Bundle.php b/src/Symfony/Component/HttpKernel/Bundle/Bundle.php
 --- a/src/Symfony/Component/HttpKernel/Bundle/Bundle.php
 +++ b/src/Symfony/Component/HttpKernel/Bundle/Bundle.php
@@ -481,6 +521,36 @@ diff --git a/src/Symfony/Component/HttpKernel/KernelInterface.php b/src/Symfony/
 +    public function shutdown(): void;
  
      /**
+diff --git a/src/Symfony/Component/Lock/Store/DoctrineDbalStore.php b/src/Symfony/Component/Lock/Store/DoctrineDbalStore.php
+--- a/src/Symfony/Component/Lock/Store/DoctrineDbalStore.php
++++ b/src/Symfony/Component/Lock/Store/DoctrineDbalStore.php
+@@ -259,5 +259,5 @@ class DoctrineDbalStore implements PersistingStoreInterface
+      * @return Schema The (possibly new) schema with the table added
+      */
+-    public function configureSchema(Schema $schema, \Closure $isSameDatabase)
++    public function configureSchema(Schema $schema, \Closure $isSameDatabase): Schema
+     {
+         if ($schema->hasTable($this->table)) {
+diff --git a/src/Symfony/Component/Messenger/Bridge/Doctrine/Transport/Connection.php b/src/Symfony/Component/Messenger/Bridge/Doctrine/Transport/Connection.php
+--- a/src/Symfony/Component/Messenger/Bridge/Doctrine/Transport/Connection.php
++++ b/src/Symfony/Component/Messenger/Bridge/Doctrine/Transport/Connection.php
+@@ -355,5 +355,5 @@ class Connection implements ResetInterface
+      * @return Schema The (possibly new) schema with the table added
+      */
+-    public function configureSchema(Schema $schema, DBALConnection $forConnection, \Closure $isSameDatabase)
++    public function configureSchema(Schema $schema, DBALConnection $forConnection, \Closure $isSameDatabase): Schema
+     {
+         if ($schema->hasTable($this->configuration['table_name'])) {
+diff --git a/src/Symfony/Component/Messenger/Bridge/Doctrine/Transport/DoctrineTransport.php b/src/Symfony/Component/Messenger/Bridge/Doctrine/Transport/DoctrineTransport.php
+--- a/src/Symfony/Component/Messenger/Bridge/Doctrine/Transport/DoctrineTransport.php
++++ b/src/Symfony/Component/Messenger/Bridge/Doctrine/Transport/DoctrineTransport.php
+@@ -87,5 +87,5 @@ class DoctrineTransport implements TransportInterface, SetupableTransportInterfa
+      * @return Schema The (possibly new) schema with the table added
+      */
+-    public function configureSchema(Schema $schema, DbalConnection $forConnection, \Closure $isSameDatabase)
++    public function configureSchema(Schema $schema, DbalConnection $forConnection, \Closure $isSameDatabase): Schema
+     {
+         return $this->connection->configureSchema($schema, $forConnection, $isSameDatabase) ?? $schema;
 diff --git a/src/Symfony/Component/Routing/Loader/AttributeClassLoader.php b/src/Symfony/Component/Routing/Loader/AttributeClassLoader.php
 --- a/src/Symfony/Component/Routing/Loader/AttributeClassLoader.php
 +++ b/src/Symfony/Component/Routing/Loader/AttributeClassLoader.php
