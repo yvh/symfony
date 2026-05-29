@@ -21,10 +21,13 @@ Symfony 8.1 is backed by:
 
 * [TYPO3][27]
 * [Les-Tilleuls.coop][28]
+* [Mailtrap][29]
 
 **TYPO3** is an open source enterprise content management system, built with open web standards. It delivers high-performance digital solutions through a robust feature set renowned for its scalable architecture, multisite and multilingual capabilities, and connectivity. TYPO3 has been certified as a digital public good by the Digital Public Goods Alliance, bringing a trusted CMS platform to the broader PHP and Symfony ecosystem.
 
 **Les-Tilleuls.coop** is a team of 70+ Symfony experts who can help you design, develop and fix your projects. We provide a wide range of professional services including development, consulting, coaching, training and audits. We also are highly skilled in JS, Go and DevOps. We are a worker cooperative!
+
+**Mailtrap** is a platform for testing and delivering emails, designed to support modern development workflows and production-grade sending. It offers secure sandboxes, email APIs, and monitoring tools for reliable email delivery.
 
 Help Symfony by [sponsoring][31] its development!
 
@@ -90,6 +93,6 @@ and supported by [Symfony contributors][19].
 [26]: https://symfony.com/book
 [27]: https://typo3.com/
 [28]: https://les-tilleuls.coop/
-[29]: https://
+[29]: https://l.rw.rw/symfony8.0_backers
 [30]: https://
 [31]: https://symfony.com/sponsor
