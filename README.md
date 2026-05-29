@@ -17,7 +17,7 @@ Installation
 Sponsor
 -------
 
-Symfony 8.2 is looking for [backers][28].
+Symfony 8.2 is looking for [backers][27].
 
 
 Help Symfony by [sponsoring][31] its development!
@@ -86,4 +86,5 @@ and supported by [Symfony contributors][19].
 [28]: https://
 [29]: https://
 [30]: https://
-[31]: https://symfony.com/sponsor
+[31]: https://
+[32]: https://symfony.com/sponsor
