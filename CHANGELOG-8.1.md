@@ -10,7 +10,7 @@ To get the diff between two versions, go to https://github.com/symfony/symfony/c
 * 8.1.0 (2026-05-29)
 
  * feature #64398 Shopware is backing Symfony 8.1, thanks to them! (nicolas-grekas)
- * feature #64397 Mailtrap is backing Ssymfony 8.1, thanks to them! (nicolas-grekas)
+ * feature #64397 Mailtrap is backing Symfony 8.1, thanks to them! (nicolas-grekas)
  * feature #64396 Les-Tilleuls.coop is backing Symfony 8.1, thanks to them! (nicolas-grekas)
  * feature #64395 TYPO3 is backing Symfony 8.1, thanks to them! (nicolas-grekas)
  * bug #64376 [Translation] Fix XLIFF 2 catalog metadata (MatTheCat)
