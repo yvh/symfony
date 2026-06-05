@@ -16,3 +16,9 @@ parameters:
     ignoreErrors:
         # Added in PHP 8.4
         - '#^Class BcMath\\Number not found\.$#'
+
+services:
+    -
+        class: UnserializeMissingAllowedClassesRule
+        tags:
+            - phpstan.rules.rule

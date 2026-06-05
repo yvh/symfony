@@ -84,7 +84,7 @@ jobs:
           composer require --no-progress --ansi --no-plugins phpstan/phpstan:@stable phpstan/phpstan-deprecation-rules:@stable phpunit/phpunit:^9.5 php-http/discovery psr/event-dispatcher mongodb/mongodb
 
       - name: PHPStan on target branch
-        run: ./vendor/bin/phpstan analyse --error-format=json --no-progress > .github/sa-tools/phpstan-base.json || true
+        run: ./vendor/bin/phpstan analyse --error-format=json --no-progress --autoload-file='.github/sa-tools/UnserializeMissingAllowedClassesRule.php' > .github/sa-tools/phpstan-base.json || true
 
       - name: Switch to PR
         run: |
@@ -94,5 +94,5 @@ jobs:
 
       - name: PHPStan
         run: |
-          ./vendor/bin/phpstan analyse --error-format=json --no-progress > .github/sa-tools/phpstan-pr.json || true
+          ./vendor/bin/phpstan analyse --error-format=json --no-progress --autoload-file='.github/sa-tools/UnserializeMissingAllowedClassesRule.php' > .github/sa-tools/phpstan-pr.json || true
           php .github/sa-tools/phpstan-diff.php .github/sa-tools/phpstan-base.json .github/sa-tools/phpstan-pr.json
