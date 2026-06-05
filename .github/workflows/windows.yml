@@ -35,8 +35,9 @@ jobs:
           git config --global user.name "Symfony"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
+          persist-credentials: false
           fetch-depth: 2
 
       - name: Setup PHP
