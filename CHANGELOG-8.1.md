@@ -7,6 +7,19 @@ in 8.1 minor versions.
 To get the diff for a specific change, go to https://github.com/symfony/symfony/commit/XXX where XXX is the change hash
 To get the diff between two versions, go to https://github.com/symfony/symfony/compare/v8.1.0...v8.1.1
 
+* 8.1.0 (2026-05-29)
+
+ * feature #64398 Shopware is backing Symfony 8.1, thanks to them! (nicolas-grekas)
+ * feature #64397 Mailtrap is backing Symfony 8.1, thanks to them! (nicolas-grekas)
+ * feature #64396 Les-Tilleuls.coop is backing Symfony 8.1, thanks to them! (nicolas-grekas)
+ * feature #64395 TYPO3 is backing Symfony 8.1, thanks to them! (nicolas-grekas)
+ * bug #64376 [Translation] Fix XLIFF 2 catalog metadata (MatTheCat)
+ * bug #64386 [Dotenv] Don't truncate external env vars containing $ when referenced via ${...} indirection (nicolas-grekas)
+ * bug #64388 [Yaml] Fix parsing inline anchored values (nicolas-grekas)
+ * bug #64358 [ObjectMapper] Fix TargetClass generic type in ConditionCallableInterface (Mudassar Ali)
+ * bug #64389 Migrate `configureSchema()` to DBAL's editor API (nicolas-grekas)
+ * bug #64102 Remove usage of `Kernel::VERSION` (fabpot)
+
 * 8.1.0-RC1 (2026-05-27)
 
  * security #cve-2026-48747 [Mailer] Pin Mailomat webhook signature algorithm to SHA-256 (nicolas-grekas)
