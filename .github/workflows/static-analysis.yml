@@ -83,8 +83,8 @@ jobs:
           composer remove --dev --no-update --no-interaction symfony/phpunit-bridge
           composer require --no-progress --ansi --no-plugins phpstan/phpstan:@stable phpstan/phpstan-deprecation-rules:@stable phpunit/phpunit:^9.5 php-http/discovery psr/event-dispatcher mongodb/mongodb
 
-      - name: Generate PHPStan baseline
-        run: ./vendor/bin/phpstan analyse --generate-baseline=.github/sa-tools/phpstan.baseline.neon --allow-empty-baseline --no-progress
+      - name: PHPStan on target branch
+        run: ./vendor/bin/phpstan analyse --error-format=json --no-progress > .github/sa-tools/phpstan-base.json || true
 
       - name: Switch to PR
         run: |
@@ -93,4 +93,6 @@ jobs:
           git checkout -m FETCH_HEAD
 
       - name: PHPStan
-        run: ./vendor/bin/phpstan analyse --no-progress || ./vendor/bin/phpstan analyse --error-format=github --no-progress
+        run: |
+          ./vendor/bin/phpstan analyse --error-format=json --no-progress > .github/sa-tools/phpstan-pr.json || true
+          php .github/sa-tools/phpstan-diff.php .github/sa-tools/phpstan-base.json .github/sa-tools/phpstan-pr.json

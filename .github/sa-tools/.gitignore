@@ -1,6 +1,6 @@
 *
 !.gitignore
 !psalm.baseline.xml
-!phpstan.baseline.neon
+!phpstan-diff.php
 !stubs
 !stubs/*
