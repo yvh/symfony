@@ -22,3 +22,11 @@ services:
         class: UnserializeMissingAllowedClassesRule
         tags:
             - phpstan.rules.rule
+    -
+        class: HardenedComparisonRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: UnserializeToStringTrampolineRule
+        tags:
+            - phpstan.rules.rule
