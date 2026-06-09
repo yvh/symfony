@@ -8,6 +8,11 @@ Read more about this in the [Symfony documentation](https://symfony.com/doc/8.1/
 
 If you're upgrading from a version below 8.0, follow the [8.0 upgrade guide](UPGRADE-8.0.md) first.
 
+Cache
+-----
+
+ * Add argument `$raw` to `ArrayAdapter::getValues()`
+
 Console
 -------
 
@@ -125,7 +130,6 @@ Security
 --------
 
  * Add `getParentRoleNames()` method to `RoleHierarchyInterface`
- * Make `RoleHierarchyInterface::getReachableRoleNames()` return roles as both keys and values
  * Deprecate `SameOriginCsrfTokenManager::onKernelResponse()`, `SameOriginCsrfTokenManager::clearCookies()` and `SameOriginCsrfTokenManager::persistStrategy()`; this logic is now handled automatically by `SameOriginCsrfListener`
  * Deprecate passing the `$eraseCredentials` argument to `AuthenticatorManager::__construct()`, as the `eraseCredentials()` method was removed in Symfony 8.0
 

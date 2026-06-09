@@ -1,6 +1,5 @@
 includes:
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon
-    - .github/sa-tools/phpstan.baseline.neon
 
 parameters:
     level: 5
@@ -18,3 +17,17 @@ parameters:
     ignoreErrors:
         # Added in PHP 8.4
         - '#^Class BcMath\\Number not found\.$#'
+
+services:
+    -
+        class: UnserializeMissingAllowedClassesRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: HardenedComparisonRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: UnserializeToStringTrampolineRule
+        tags:
+            - phpstan.rules.rule
