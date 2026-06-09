@@ -83,8 +83,8 @@ jobs:
           composer remove --dev --no-update --no-interaction symfony/phpunit-bridge
           composer require --no-progress --ansi --no-plugins phpstan/phpstan:@stable phpstan/phpstan-deprecation-rules:@stable phpunit/phpunit:^11.5 php-http/discovery psr/event-dispatcher mongodb/mongodb
 
-      - name: Generate PHPStan baseline
-        run: ./vendor/bin/phpstan analyse --generate-baseline=.github/sa-tools/phpstan.baseline.neon --allow-empty-baseline --no-progress
+      - name: PHPStan on target branch
+        run: ./vendor/bin/phpstan analyse --error-format=json --no-progress --autoload-file='.github/sa-tools/phpstan-rules.php' > .github/sa-tools/phpstan-base.json || true
 
       - name: Switch to PR
         run: |
@@ -93,4 +93,27 @@ jobs:
           git checkout -m FETCH_HEAD
 
       - name: PHPStan
-        run: ./vendor/bin/phpstan analyse --no-progress || ./vendor/bin/phpstan analyse --error-format=github --no-progress
+        run: |
+          ./vendor/bin/phpstan analyse --error-format=json --no-progress --autoload-file='.github/sa-tools/phpstan-rules.php' > .github/sa-tools/phpstan-pr.json || true
+          php .github/sa-tools/phpstan-diff.php .github/sa-tools/phpstan-base.json .github/sa-tools/phpstan-pr.json
+
+  hardening-tests:
+    name: Hardening tests
+    runs-on: ubuntu-24.04
+
+    env:
+      php-version: '8.2'
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
+        with:
+          php-version: ${{ env.php-version }}
+          coverage: none
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check hardening-test conventions
+        run: php .github/sa-tools/check-hardening-tests.php

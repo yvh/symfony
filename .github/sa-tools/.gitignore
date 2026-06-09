@@ -1,6 +1,11 @@
 *
 !.gitignore
 !psalm.baseline.xml
-!phpstan.baseline.neon
+!phpstan-diff.php
+!phpstan-rules.php
+!check-hardening-tests.php
+!UnserializeMissingAllowedClassesRule.php
+!HardenedComparisonRule.php
+!UnserializeToStringTrampolineRule.php
 !stubs
 !stubs/*
