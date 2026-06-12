@@ -211,7 +211,7 @@ $violations = [];
 
 $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS));
 foreach ($it as $file) {
-    if (!$file->isFile() || 'php' !== $file->getExtension() || false !== strpos($file->getPathname(), '/Tests/')) {
+    if (!$file->isFile() || 'php' !== $file->getExtension() || false !== strpos($file->getPathname(), '/Tests/') || false !== strpos($file->getPathname(), '/vendor/')) {
         continue;
     }
 
