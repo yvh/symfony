@@ -36,6 +36,8 @@ use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassMap\CostRequestWithSource
 use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassMap\CostRequestWithSourceView;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassMap\Quote;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassMap\QuoteRequestView;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassMap\RichDomainUser;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassMap\RichDomainUserView;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassRule\A as ClassRuleA;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassRule\B as ClassRuleB;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\ClassRule\C as ClassRuleC;
@@ -75,6 +77,10 @@ use Symfony\Component\ObjectMapper\Tests\Fixtures\IsNotNullCondition\IsNotNullSo
 use Symfony\Component\ObjectMapper\Tests\Fixtures\IsNotNullCondition\IsNotNullTarget;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\IsNotNullCondition\IsNotNullTargetMapping;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\LazyFoo;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\MagicGet\MagicGetUser;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\MagicGet\MagicGetUserView;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\MapExistingObject\ExistingObjectWithPublicProperty;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\MapExistingObject\ExistingObjectWithSetter;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\MapStruct\AToBMapper;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\MapStruct\MapStructMapperMetadataFactory;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\MapStruct\Source;
@@ -131,7 +137,14 @@ use Symfony\Component\ObjectMapper\Tests\Fixtures\TransformCollection\TransformC
 use Symfony\Component\ObjectMapper\Tests\Fixtures\TransformCollection\TransformCollectionB;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\TransformCollection\TransformCollectionC;
 use Symfony\Component\ObjectMapper\Tests\Fixtures\TransformCollection\TransformCollectionD;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\Uninitialized\Draft;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\Uninitialized\DraftView;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\Uninitialized\Post;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\Uninitialized\PostView;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\Unreadable\Order;
+use Symfony\Component\ObjectMapper\Tests\Fixtures\Unreadable\OrderView;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ObjectMapperTest extends TestCase
 {
@@ -181,6 +194,14 @@ final class ObjectMapperTest extends TestCase
         $d->concat = 'shouldtestme';
 
         yield [$d, [$a], [new ReflectionObjectMapperMetadataFactory(), PropertyAccess::createPropertyAccessor()]];
+
+        $existingObjectWithSetterExpected = new ExistingObjectWithSetter('bar');
+        $existingObjectWithSetterTarget = new ExistingObjectWithSetter('foo');
+        yield [$existingObjectWithSetterExpected, [(object) ['name' => 'bar'], $existingObjectWithSetterTarget], [new ReflectionObjectMapperMetadataFactory(), PropertyAccess::createPropertyAccessor()]];
+
+        $existingObjectWithPublicPropertyExpected = new ExistingObjectWithPublicProperty('bar');
+        $existingObjectWithPublicPropertyTarget = new ExistingObjectWithPublicProperty('foo');
+        yield [$existingObjectWithPublicPropertyExpected, [(object) ['name' => 'bar'], $existingObjectWithPublicPropertyTarget], [new ReflectionObjectMapperMetadataFactory(), PropertyAccess::createPropertyAccessor()]];
 
         yield [new MultipleTargetsC(foo: 'bar'), [new MultipleTargetsA()]];
     }
@@ -847,6 +868,77 @@ final class ObjectMapperTest extends TestCase
         $this->assertEquals('bar', $costRequestView->foo, 'Explicit mapping should work');
         $this->assertEquals(10, $costRequestView->amount, 'Auto-mapping should also work for properties with the same name');
         $this->assertEquals(20, $costRequestView->tax);
+    }
+
+    #[DataProvider('provideAccessor')]
+    public function testClassMapIgnoresUnreadableSourcePropertyAbsentFromTarget(?PropertyAccessorInterface $accessor)
+    {
+        $mapper = new ObjectMapper(
+            new ReverseClassObjectMapperMetadataFactory(
+                new ReflectionObjectMapperMetadataFactory(),
+                [RichDomainUser::class => RichDomainUserView::class],
+            ),
+            $accessor,
+        );
+
+        $view = $mapper->map(new RichDomainUser());
+
+        $this->assertInstanceOf(RichDomainUserView::class, $view);
+        $this->assertSame(1, $view->id);
+        $this->assertSame('john', $view->username);
+    }
+
+    public static function provideAccessor(): iterable
+    {
+        yield 'with property accessor' => [PropertyAccess::createPropertyAccessor()];
+        yield 'without property accessor' => [null];
+    }
+
+    #[DataProvider('provideAccessor')]
+    public function testNonPublicSourcePropertyWithoutMagicGetIsIgnored(?PropertyAccessorInterface $accessor)
+    {
+        $mapper = new ObjectMapper(new ReflectionObjectMapperMetadataFactory(), $accessor);
+
+        $view = $mapper->map(new Order());
+
+        $this->assertInstanceOf(OrderView::class, $view);
+        $this->assertSame('o1', $view->ref);
+        $this->assertNull($view->auditTrail);
+    }
+
+    #[DataProvider('provideAccessor')]
+    public function testNonPublicSourcePropertyExposedByMagicGetIsMapped(?PropertyAccessorInterface $accessor)
+    {
+        $mapper = new ObjectMapper(new ReflectionObjectMapperMetadataFactory(), $accessor);
+
+        $view = $mapper->map(new MagicGetUser());
+
+        $this->assertInstanceOf(MagicGetUserView::class, $view);
+        $this->assertSame(1, $view->id);
+        $this->assertSame('magic-value', $view->name);
+    }
+
+    #[DataProvider('provideAccessor')]
+    public function testUninitializedSourcePropertyAbsentFromTargetIsIgnored(?PropertyAccessorInterface $accessor)
+    {
+        $mapper = new ObjectMapper(new ReflectionObjectMapperMetadataFactory(), $accessor);
+
+        $view = $mapper->map(new Draft());
+
+        $this->assertInstanceOf(DraftView::class, $view);
+        $this->assertSame('hello', $view->title);
+    }
+
+    #[DataProvider('provideAccessor')]
+    public function testUninitializedSourcePropertyFallsBackToConstructorDefault(?PropertyAccessorInterface $accessor)
+    {
+        $mapper = new ObjectMapper(new ReflectionObjectMapperMetadataFactory(), $accessor);
+
+        $view = $mapper->map(new Post());
+
+        $this->assertInstanceOf(PostView::class, $view);
+        $this->assertSame('hello', $view->title);
+        $this->assertSame('none', $view->summary);
     }
 
     public function testMissingSourcePropertiesAreIgnored()

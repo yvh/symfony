@@ -101,14 +101,31 @@ git commit --no-edit
 |---|---|
 | `CHANGELOG*.md` | Keep entries from both sides; newer branch entries on top |
 | Version constants, `composer.json` branch aliases | Keep the TARGET branch value |
+| `.github/workflows/*.yml`, CI config | Keep the TARGET value for branch-specific pins. A new job merged from SOURCE may carry SOURCE's `php-version` (its branch minimum); bump it to the TARGET's minimum (see `min_php_requirements` in releases.json) |
+| Idiom the TARGET replaced (e.g. `unserialize(serialize())` - a deep-clone helper, logic extracted to a trait, a method/class removed) | Take the TARGET version; the SOURCE change is superseded. `git checkout --ours <file>` then re-apply any security option (e.g. `allowed_classes`) the TARGET's version happens to drop |
+| File the TARGET deleted (modify/delete conflict) | Keep it deleted if the TARGET removed the feature (confirm with `git log <TARGET> -- <file>`); the SOURCE edit is moot. `git rm <file>` |
+| Test using docblock metadata (`@dataProvider`, `@group legacy`) | Convert to attributes (`#[DataProvider(...)]`, `#[Group(...)]`) when the TARGET runs PHPUnit 10+ (7.4/8.x here); docblock providers are ignored and the test errors with "too few arguments" |
 | Code files | Merge logically based on context; when unsure, ask the user |
 
-#### Legacy tests across major versions
+#### Structural divergence across major versions
 
-When merging from one major version to the next (e.g. 6.4 → 7.0), remove test
-methods marked with `@group legacy` or `#[Group('legacy')]`. The deprecations
-they cover have been removed in the new major version, so the tests are no
-longer relevant.
+A newer major may have removed deprecated classes, attributes, or config formats
+(e.g. `TaggedLocator`, XML DI config), raised the minimum PHP version, or refactored
+shared logic into a trait or a new utility class. When merging across such a boundary:
+
+- Remove test methods marked `@group legacy` / `#[Group('legacy')]` for deprecations
+  the new major dropped, **and** any test/fixture/import that references a removed
+  symbol (otherwise it fatals on the TARGET).
+- Each major raises the minimum PHP (min PHP per branch in releases.json
+  `min_php_requirements`: 6.4=8.1, 7.4=8.2, 8.0=8.4). Code merged from SOURCE that
+  branches on or polyfills a PHP below the TARGET's minimum (`\PHP_VERSION_ID < ...`
+  guards, or `function_exists()` / `class_exists()` fallbacks for now-always-available
+  symbols) is dead on the TARGET and can be collapsed to the modern path. The TARGET
+  usually dropped it already, so prefer its version; clean up only where SOURCE's
+  old-PHP code lands somewhere the TARGET had not simplified.
+- Prefer the TARGET branch's approach for any refactored idiom.
+- Fastest sanity check: look at how the *downstream* branch (one already past this
+  divergence, e.g. 8.2 while resolving on 8.0) resolved the same files, and match it.
 
 After resolving, show `git diff HEAD~1` (first parent of the merge commit, i.e.
 the previous TARGET state) and wait for the user to confirm the resolution looks
@@ -149,6 +166,28 @@ or check CI). Only fix failures introduced by the merge:
 3. Re-run failing tests until green and deprecation-free.
 
 Report any pre-existing failures to the user without attempting to fix them.
+
+### 2c-bis. Run the repo's static-analysis / hardening checks
+
+If the repo ships custom static analysis (this one has `.github/sa-tools/` with
+PHPStan rules and `check-hardening-tests.php`), the merge carries those rules into
+the TARGET, where they now apply to the TARGET's **own** code. Newer-branch code
+can trip rules the SOURCE introduced but never had to satisfy. Run them:
+
+```bash
+php .github/sa-tools/check-hardening-tests.php
+# and the custom PHPStan rules, as wired in .github/workflows/static-analysis.yml
+```
+
+Fix the branch-specific gaps (e.g. add `['allowed_classes' => …]` to a bare
+`unserialize()`, add an `instanceof \Stringable` guard to a string-property
+`__unserialize()`, or add the missing regression test). These gaps are not
+*introduced* by the merge, but the merge makes the checks apply — so they must be
+green before pushing. Confirm scope with the user before a large hardening pass.
+
+Beware false positives: untracked nested `vendor/` dirs and the local PHP
+extension set (a missing extension falls back to a possibly-outdated polyfill) can
+produce findings/failures that do not exist on a clean checkout / CI.
 
 ### 2d. Ask for confirmation before pushing
 
@@ -196,6 +235,9 @@ All merges complete:
   sides, never dropped.
 - A merge can introduce test failures even without conflicts, because behavior
   from the older branch may be incompatible with newer code. Always run tests.
+- A **clean (no-conflict) merge still needs verification**, not just a commit:
+  auto-merged test metadata (docblock vs attribute), security-guard slot indices,
+  and CI version pins can each be wrong even when git reports no conflict.
 - Some components have slow test suites. Only run tests for components with
   changed files, not the entire project.
 
@@ -205,3 +247,6 @@ All merges complete:
 - **Never** use `--no-verify` on commits.
 - **Never** auto-recover from a failed `git push` or `git pull`. Stop and hand
   control back to the user.
+- **Never** parallelize the cascade or run branches concurrently (e.g. via subagents): each
+  merge depends on the previous one and shares the git working tree. Run strictly oldest to
+  newest, one at a time.

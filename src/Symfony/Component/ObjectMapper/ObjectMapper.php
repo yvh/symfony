@@ -102,21 +102,23 @@ final class ObjectMapper implements ObjectMapperInterface, ObjectMapperAwareInte
         $objectMap[$source] = $mappedTarget;
         $ctorArguments = [];
         $targetConstructor = $targetRefl->getConstructor();
-        foreach ($targetConstructor?->getParameters() ?? [] as $parameter) {
-            $parameterName = $parameter->getName();
+        if (!$mappingToObject || !$rootCall) {
+            foreach ($targetConstructor?->getParameters() ?? [] as $parameter) {
+                $parameterName = $parameter->getName();
 
-            if ($targetRefl->hasProperty($parameterName)) {
-                $property = $targetRefl->getProperty($parameterName);
+                if ($targetRefl->hasProperty($parameterName)) {
+                    $property = $targetRefl->getProperty($parameterName);
 
-                if ($property->isReadOnly() && $property->isInitialized($mappedTarget)) {
-                    continue;
+                    if ($property->isReadOnly() && $property->isInitialized($mappedTarget)) {
+                        continue;
+                    }
                 }
-            }
 
-            if ($this->isReadable($source, $parameterName)) {
-                $ctorArguments[$parameterName] = $this->getRawValue($source, $parameterName);
-            } else {
-                $ctorArguments[$parameterName] = $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null;
+                if ($this->isReadable($source, $parameterName)) {
+                    $ctorArguments[$parameterName] = $this->getRawValue($source, $parameterName);
+                } else {
+                    $ctorArguments[$parameterName] = $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null;
+                }
             }
         }
 
@@ -189,6 +191,10 @@ final class ObjectMapper implements ObjectMapperInterface, ObjectMapperAwareInte
                 continue;
             }
 
+            if (!$this->isReadable($source, $propertyName, $refl)) {
+                continue;
+            }
+
             $rawValue = $this->getRawValue($source, $propertyName);
             if (
                 \is_object($rawValue)
@@ -212,14 +218,6 @@ final class ObjectMapper implements ObjectMapperInterface, ObjectMapperAwareInte
             }
         }
 
-        if ($mappingToObject && $rootCall && $ctorArguments) {
-            foreach ($ctorArguments as $property => $value) {
-                if ($this->propertyIsMappable($refl, $property) && $this->propertyIsMappable($targetRefl, $property)) {
-                    $mapToProperties[$property] = $value;
-                }
-            }
-        }
-
         foreach ($mapToProperties as $property => $value) {
             if ($this->propertyAccessor) {
                 if ($this->propertyAccessor->isWritable($mappedTarget, $property)) {
@@ -229,7 +227,7 @@ final class ObjectMapper implements ObjectMapperInterface, ObjectMapperAwareInte
                 continue;
             }
 
-            if (!$targetRefl->hasProperty($property)) {
+            if (!$this->propertyIsMappable($targetRefl, $property)) {
                 continue;
             }
 
@@ -239,17 +237,32 @@ final class ObjectMapper implements ObjectMapperInterface, ObjectMapperAwareInte
         return $mappedTarget;
     }
 
-    private function isReadable(object $source, string $propertyName): bool
+    private function isReadable(object $source, string $propertyName, ?\ReflectionClass $refl = null): bool
     {
         if ($this->propertyAccessor) {
             return $this->propertyAccessor->isReadable($source, $propertyName);
         }
 
-        if (!property_exists($source, $propertyName) && !isset($source->{$propertyName})) {
-            return false;
+        if (!property_exists($source, $propertyName)) {
+            return isset($source->{$propertyName});
         }
 
-        return true;
+        $refl ??= new \ReflectionClass($source);
+
+        if (!$refl->hasProperty($propertyName)) {
+            // ReflectionClass doesn't see dynamic properties: property_exists() matched one, and those are always public
+            return true;
+        }
+
+        $property = $refl->getProperty($propertyName);
+
+        if (!$property->isPublic()) {
+            // a non-public property can only be read through magic __get()
+            return method_exists($source, '__get');
+        }
+
+        // an uninitialized property is not readable, unless unset() re-enabled magic methods on it
+        return $property->isInitialized($source) || isset($source->{$propertyName});
     }
 
     private function getRawValue(object $source, string $propertyName): mixed
