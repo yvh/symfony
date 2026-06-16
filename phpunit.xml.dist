@@ -12,6 +12,7 @@
     <php>
         <ini name="error_reporting" value="-1" />
         <ini name="memory_limit" value="-1" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[total]=0&amp;ignoreFile=./.github/deprecation-ignore" />
         <env name="DUMP_LIGHT_ARRAY" value="" />
         <env name="DUMP_STRING_LENGTH" value="" />
         <env name="LDAP_HOST" value="localhost" />
