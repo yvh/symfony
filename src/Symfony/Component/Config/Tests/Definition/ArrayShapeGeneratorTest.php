@@ -108,7 +108,23 @@ class ArrayShapeGeneratorTest extends TestCase
         $root = new ArrayNodeDefinition('root');
         $root->append($proto);
 
-        $expected = "array{\n *     proto?: \BackedEnum|string|array<string, scalar|\Symfony\Component\Config\Loader\ParamConfigurator|null>,\n * }";
+        $expected = "array{\n *     proto?: \BackedEnum|\Symfony\Component\Config\Loader\ParamConfigurator|string|array<string, scalar|\Symfony\Component\Config\Loader\ParamConfigurator|null>,\n * }";
+
+        $this->assertStringContainsString($expected, ArrayShapeGenerator::generate($root->getNode()));
+    }
+
+    public function testAcceptAndWrapScalarAlternativeAcceptsParam()
+    {
+        $proto = new ArrayNodeDefinition('proto');
+        $proto
+            ->useAttributeAsKey('name')
+            ->acceptAndWrap(['string'])
+            ->prototype('scalar')->end();
+
+        $root = new ArrayNodeDefinition('root');
+        $root->append($proto);
+
+        $expected = 'proto?: \Symfony\Component\Config\Loader\ParamConfigurator|string|array<string, scalar|\Symfony\Component\Config\Loader\ParamConfigurator|null>,';
 
         $this->assertStringContainsString($expected, ArrayShapeGenerator::generate($root->getNode()));
     }
